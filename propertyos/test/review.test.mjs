@@ -97,6 +97,12 @@ test('rent change applies from a chosen month; earlier months keep the old rent'
   assert.equal(by[cur], 12000);
   assert.equal(led.outstanding, 10000 + 10000 + 12000 + 12000);
 
+  // Portfolio charts use the month-specific expected amount, including property filters.
+  const oldBoard = await L.get(`/rent?month=${shift(cur, -2)}`);
+  const currentBoard = await L.get(`/rent?month=${cur}`);
+  assert.equal(oldBoard.units.find(u => u.unit_id === unit).expected, 10000);
+  assert.equal(currentBoard.units.find(u => u.unit_id === unit).expected, 12000);
+
   // A later change applies from its own month; the month before keeps what was agreed then.
   r = await L.patch(`/units/${unit}`, { rent: 15000, rent_from: cur });
   assert.equal(r.status, 200);
@@ -281,4 +287,15 @@ test('housekeeping removes stale rows and keeps fresh ones', async () => {
   await prune(env.DB);
   assert.equal(raw.prepare("SELECT COUNT(*) AS n FROM rl WHERE key = 'old-key'").get().n, 0);
   assert.equal(raw.prepare("SELECT COUNT(*) AS n FROM rl WHERE key = 'new-key'").get().n, 1);
+});
+
+test('portfolio attention counts pending claims from earlier months by property', async () => {
+  const unit = await mkUnit('Attention');
+  const tenant = await signup('attention@example.com', 'Attention Tenant', 'z', { inviteCode: await invite(unit) });
+  const before = (await L.get('/rent')).summary;
+  const claim = await tenant.post(`/units/${unit}/payments`, { period: shift(thisMonth(), -1), amount: 500, method: 'cash' });
+  assert.equal(claim.status, 200);
+  const after = (await L.get('/rent')).summary;
+  assert.equal(after.other_claims, before.other_claims + 1);
+  assert.equal(after.other_claims_by_property[prop.id], (before.other_claims_by_property[prop.id] || 0) + 1);
 });
