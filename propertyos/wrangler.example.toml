@@ -1,0 +1,13 @@
+# OPTIONAL. Only for people who deploy from the command line with `wrangler pages deploy`.
+# Do not rename this to wrangler.toml if you set things up in the Cloudflare dashboard:
+# Pages then treats the file as the source of truth and locks the dashboard settings.
+name = "propertyos"
+pages_build_output_dir = "public"
+compatibility_date = "2025-01-01"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "propertyos"
+database_id = "PASTE-YOUR-D1-DATABASE-ID"
+
+# The secret is not stored here. Run:  wrangler pages secret put APP_SECRET

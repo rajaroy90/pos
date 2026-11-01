@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en" class="lq">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="light dark">
+  <title>PropertyOS</title>
+  <meta name="description" content="Rent, leases, tenants, repairs, deposits, utilities and UPI collection — one offline-ready app for Indian landlords.">
+
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="assets/logo.png">
+  <link rel="apple-touch-icon" href="assets/icon-512.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="assets/icon-512.png">
+
+  <!-- Third-party and config scripts (must load before the app) -->
+  <script src="vendor/supabase.js"></script>
+  <script src="config.js"></script>
+  <script src="vendor/qr.js"></script>
+
+  <!-- Network hints -->
+  <link rel="preconnect" href="https://tweugilbeeqlxdvdxhqq.supabase.co" crossorigin>
+  <link rel="preload" as="image" href="assets/logo.png">
+
+  <!-- Theme and sharing metadata -->
+  <meta name="theme-color" content="#0a84ff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#080c24" media="(prefers-color-scheme: dark)">
+  <meta property="og:title" content="PropertyOS — Collect rent. Beautifully.">
+  <meta property="og:description" content="Leases, tenants, repairs, deposits, utilities and UPI rent QR codes in one fast, offline-ready app.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="assets/logo.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="PropertyOS">
+  <meta name="application-name" content="PropertyOS">
+  <meta name="format-detection" content="telephone=no">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/icon-512.png">
+  <link rel="apple-touch-icon" sizes="192x192" href="assets/icon-192.png">
+
+  <link rel="stylesheet" href="css/base.css">
+</head>
+<body>
+  <a class="skip-to-main" href="#v">Skip to content</a>
+  <noscript>
+    <p style="padding:24px;font:16px system-ui">PropertyOS needs JavaScript. Please enable it and reload.</p>
+  </noscript>
+
+  <!-- Animated background blobs -->
+  <div class="bl"><i></i><i></i><i></i></div>
+
+  <!-- Desktop sidebar -->
+  <aside class="g" id="sd"></aside>
+
+  <!-- App shell -->
+  <div class="app">
+    <header>
+      <div class="logo" id="lg"></div>
+      <div class="br">PropertyOS</div>
+      <div class="sp"></div>
+      <button class="pill g" id="scbtn" aria-label="Scan QR" style="padding:9px 11px"></button>
+      <button class="pill g" id="sbtn" aria-label="Search" style="padding:9px 11px"></button>
+      <button class="pill g" id="rl" aria-label="Sign out"></button>
+    </header>
+    <main id="v" class="v"></main>
+  </div>
+
+  <!-- Mobile tab bar, toasts, sign-in gate -->
+  <nav class="tb g" id="tb"></nav>
+  <div class="ts g" id="ts"></div>
+  <div class="gt" id="gate" style="display:flex"></div>
+
+  <!-- Core app -->
+  <script src="js/core/app.js"></script>
+
+  <!-- Feature modules: order matters, each extends the ones before it -->
+  <script src="js/modules/01-glass-engine.js"></script>
+  <script src="js/modules/02-glass-lab-and-backups.js"></script>
+  <script src="js/modules/03-offline-and-keyboard.js"></script>
+  <script src="js/modules/04-entrance-upi-and-exit.js"></script>
+  <script src="js/modules/05-appearance-studio.js"></script>
+  <script src="js/modules/06-brand-and-ux-polish.js"></script>
+  <script src="js/modules/07-experience-layer.js"></script>
+  <script src="js/modules/08-control-center.js"></script>
+  <script src="js/modules/09-public-receipts.js"></script>
+  <script src="js/modules/10-deposits.js"></script>
+  <script src="js/modules/11-utilities.js"></script>
+  <script src="js/modules/12-agreements.js"></script>
+  <script src="js/modules/13-reports.js"></script>
+  <script src="js/modules/14-team.js"></script>
+  <script src="js/modules/15-liquid-premium.js"></script>
+  <script src="js/modules/16-wallet-and-collections.js"></script>
+  <script src="js/modules/17-reference-skin.js"></script>
+
+  <!-- Spacing and typography refinements: last, so they win the cascade -->
+  <link rel="stylesheet" href="css/refinements.css">
+  <!-- Liquid Glass v2: final layer -->
+  <link rel="stylesheet" href="css/liquid.css">
+  <!-- Wallet, reminders, ledger and privacy mode (po- prefixed, no overrides) -->
+  <link rel="stylesheet" href="css/wallet.css">
+  <!-- Reference skin: icon tiles, glass switch, tab lens, beam, droplets -->
+  <link rel="stylesheet" href="css/reference.css">
+</body>
+</html>

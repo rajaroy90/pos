@@ -1,0 +1,14 @@
+{
+  "name": "propertyos",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "PropertyOS: a Liquid Glass PWA for Indian landlords, tenants and gate staff. Rent, repairs and visitor passes.",
+  "engines": { "node": ">=22.5" },
+  "scripts": {
+    "dev": "node --no-warnings dev/server.mjs",
+    "test": "node --no-warnings --test test/api.test.mjs test/review.test.mjs",
+    "i18n": "node --no-warnings dev/check-i18n.mjs",
+    "stamp": "node dev/stamp.mjs"
+  }
+}

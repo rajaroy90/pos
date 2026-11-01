@@ -1,0 +1,59 @@
+{
+  "id": "/",
+  "name": "PropertyOS",
+  "short_name": "PropertyOS",
+  "description": "Collect rent beautifully. Leases, tenants, repairs, deposits, utilities and UPI rent QR codes in one fast, offline-ready app.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
+  "orientation": "any",
+  "background_color": "#080c24",
+  "theme_color": "#0a84ff",
+  "categories": ["business", "productivity", "finance"],
+  "lang": "en-IN",
+  "dir": "ltr",
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icon-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "assets/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Rent",
+      "short_name": "Rent",
+      "description": "View rent collection",
+      "url": "./?open=rent",
+      "icons": [{ "src": "assets/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Repairs",
+      "short_name": "Repairs",
+      "description": "Open repairs",
+      "url": "./?open=maint",
+      "icons": [{ "src": "assets/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}

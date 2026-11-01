@@ -1,0 +1,148 @@
+/* PropertyOS design system: tokens, wallpapers, glass tiers.
+   Glass is used for the navigation layer only (dock, panels, headers). Content stays solid.
+   data-glass: 0 solid · 1 frosted (default) · 2 refraction (Chromium, opt-in) */
+
+:root {
+  --font: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", "Noto Sans Devanagari", "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  --r-xl: 30px; --r-lg: 22px; --r-md: 16px; --r-sm: 12px; --r-pill: 999px;
+  --safe-t: env(safe-area-inset-top, 0px);
+  --safe-b: env(safe-area-inset-bottom, 0px);
+
+  /* motion: replaced with generated spring curves by fx.js when CSS linear() is supported */
+  --spring: cubic-bezier(.34, 1.45, .64, 1);
+  --spring-t: 520ms;
+  --smooth: cubic-bezier(.22, 1, .36, 1);
+  --smooth-t: 420ms;
+
+  /* status colours */
+  --good: #0f9d68; --good-bg: rgba(15, 157, 104, .12);
+  --warn: #c77700; --warn-bg: rgba(224, 138, 0, .14);
+  --bad: #d93a30; --bad-bg: rgba(217, 58, 48, .11);
+  --info: #2a6df0; --info-bg: rgba(42, 109, 240, .11);
+
+  /* accents (role) */
+  --accent: #2a6df0; --accent-2: #5fa8ff; --on-accent: #fff;
+
+  /* light surfaces */
+  --bg: #f1f4f9; --surface: #fff; --surface-2: #f5f7fb; --surface-3: #e9eef6;
+  --ink: #0d1a2d; --ink-2: #4a5972; --ink-3: #7f8da4;
+  --line: rgba(13, 26, 45, .09);
+  --shadow: 0 1px 2px rgba(13, 26, 45, .06), 0 6px 20px rgba(13, 26, 45, .06);
+  --scrim: rgba(7, 14, 28, .42);
+  --head-bg: rgba(241, 244, 249, .78);
+  --head-bg-solid: #f1f4f9;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0b111b; --surface: #151d2b; --surface-2: #1b2535; --surface-3: #243046;
+    --ink: #eaf0fa; --ink-2: #aab6cb; --ink-3: #7584a0;
+    --line: rgba(234, 240, 250, .1);
+    --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 8px 24px rgba(0, 0, 0, .28);
+    --scrim: rgba(0, 0, 0, .55);
+    --head-bg: rgba(11, 17, 27, .74); --head-bg-solid: #0b111b;
+    --good: #3ddc9b; --good-bg: rgba(61, 220, 155, .13);
+    --warn: #ffb547; --warn-bg: rgba(255, 181, 71, .14);
+    --bad: #ff7a70; --bad-bg: rgba(255, 122, 112, .14);
+    --info: #7db2ff; --info-bg: rgba(125, 178, 255, .14);
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0b111b; --surface: #151d2b; --surface-2: #1b2535; --surface-3: #243046;
+  --ink: #eaf0fa; --ink-2: #aab6cb; --ink-3: #7584a0;
+  --line: rgba(234, 240, 250, .1);
+  --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 8px 24px rgba(0, 0, 0, .28);
+  --scrim: rgba(0, 0, 0, .55);
+  --head-bg: rgba(11, 17, 27, .74); --head-bg-solid: #0b111b;
+  --good: #3ddc9b; --good-bg: rgba(61, 220, 155, .13);
+  --warn: #ffb547; --warn-bg: rgba(255, 181, 71, .14);
+  --bad: #ff7a70; --bad-bg: rgba(255, 122, 112, .14);
+  --info: #7db2ff; --info-bg: rgba(125, 178, 255, .14);
+}
+
+/* role accents */
+[data-role="landlord"] { --accent: #0d9a6a; --accent-2: #3fd6a1; }
+[data-role="tenant"]   { --accent: #2a6df0; --accent-2: #5fa8ff; }
+[data-role="guard"]    { --accent: #e5483c; --accent-2: #ff9a6b; }
+
+/* ---------- wallpapers (gradient meshes, no images) ---------- */
+[data-wall="sky"]      { --wb: #0a2b72; --w1: #2db7ff; --w2: #6a5cff; --w3: #1f6dff; --w4: #9be3ff; }
+[data-wall="emerald"]  { --wb: #06493f; --w1: #18c795; --w2: #2a9dff; --w3: #0f8f78; --w4: #b9f27a; }
+[data-wall="coral"]    { --wb: #55173c; --w1: #ff6b5b; --w2: #ffb04a; --w3: #b045ff; --w4: #ff8fb1; }
+[data-wall="dusk"]     { --wb: #2a1a6e; --w1: #8b5cff; --w2: #ff6fa6; --w3: #4a8dff; --w4: #ffb3d4; }
+[data-wall="graphite"] { --wb: #1a2030; --w1: #3a4a6b; --w2: #6b5bd2; --w3: #2a8793; --w4: #8aa0c8; }
+
+.wall { position: absolute; inset: 0; background: var(--wb, #0a2b72); overflow: hidden; z-index: 0; }
+.wall::before {
+  content: ""; position: absolute; inset: -25%;
+  background:
+    radial-gradient(42% 36% at 22% 18%, var(--w1) 0%, transparent 70%),
+    radial-gradient(46% 40% at 82% 26%, var(--w2) 0%, transparent 72%),
+    radial-gradient(52% 44% at 70% 86%, var(--w3) 0%, transparent 70%),
+    radial-gradient(30% 26% at 16% 78%, var(--w4) 0%, transparent 70%);
+  opacity: .92;
+  animation: wall-drift 46s ease-in-out infinite alternate;
+  will-change: transform;
+}
+.wall::after { /* keeps white text readable on any wallpaper */
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(4, 12, 32, .34) 0%, rgba(4, 12, 32, 0) 34%, rgba(4, 12, 32, 0) 62%, rgba(4, 12, 32, .4) 100%);
+}
+@keyframes wall-drift {
+  from { transform: translate3d(-3%, -2%, 0) rotate(0deg) scale(1); }
+  to   { transform: translate3d(3%, 3%, 0) rotate(6deg) scale(1.08); }
+}
+html[data-glass="0"] .wall::before, .reduce-motion .wall::before { animation: none; }
+@media (prefers-reduced-motion: reduce) { .wall::before { animation: none; } }
+
+/* ---------- glass ----------
+   .glass       frosted panel (real blur on tier 1+, solid-ish on tier 0)
+   .glass-fake  looks like glass but never blurs (widgets sit on a smooth gradient, so blur adds nothing) */
+.glass, .glass-fake {
+  position: relative;
+  color: #fff;
+  background:
+    linear-gradient(155deg, rgba(255, 255, 255, .34) 0%, rgba(255, 255, 255, .1) 46%, rgba(255, 255, 255, .06) 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .6),
+    inset 0 -1px 0 rgba(255, 255, 255, .14),
+    inset 0 0 0 1px rgba(255, 255, 255, .2),
+    0 12px 32px rgba(5, 16, 44, .28);
+}
+.glass::before, .glass-fake::before { /* specular sheen along the top edge */
+  content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  background: radial-gradient(120% 70% at 20% -10%, rgba(255, 255, 255, .42), rgba(255, 255, 255, 0) 55%);
+  mix-blend-mode: soft-light;
+}
+html[data-glass="1"] .glass, html[data-glass="2"] .glass {
+  backdrop-filter: blur(24px) saturate(1.7);
+  -webkit-backdrop-filter: blur(24px) saturate(1.7);
+}
+html[data-glass="2"] .glass.refract { backdrop-filter: url(#po-refract) blur(6px) saturate(1.8) brightness(1.06); }
+html[data-glass="0"] .glass, html[data-glass="0"] .glass-fake {
+  background: linear-gradient(160deg, rgba(34, 52, 92, .88), rgba(20, 34, 66, .9));
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .16), 0 8px 20px rgba(0, 0, 0, .3);
+}
+html[data-glass="0"] .glass::before, html[data-glass="0"] .glass-fake::before { display: none; }
+
+/* tinted widget tiles (the blue weather-tile look) */
+.tile { --tile: 214; }
+.tile.glass-fake {
+  background:
+    linear-gradient(160deg, hsla(var(--tile), 100%, 78%, .5) 0%, hsla(var(--tile), 95%, 62%, .34) 50%, hsla(var(--tile), 95%, 52%, .38) 100%),
+    linear-gradient(180deg, rgba(255, 255, 255, .1), rgba(255, 255, 255, .02));
+}
+html[data-glass="0"] .tile.glass-fake { background: linear-gradient(160deg, hsl(var(--tile), 62%, 36%), hsl(var(--tile), 66%, 26%)); }
+
+/* a hairline rim that brightens where light would hit */
+.rim { box-shadow: inset 0 1px 0 rgba(255, 255, 255, .55), inset 0 0 0 1px rgba(255, 255, 255, .16); }
+
+/* ---------- text helpers ---------- */
+.on-glass { color: #fff; text-shadow: 0 1px 10px rgba(5, 16, 44, .28); }
+.on-glass .dim { color: rgba(255, 255, 255, .78); }
+
+/* respect users who ask for less transparency */
+@media (prefers-reduced-transparency: reduce) {
+  html .glass, html .glass-fake { backdrop-filter: none; -webkit-backdrop-filter: none; }
+}

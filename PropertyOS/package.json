@@ -1,0 +1,21 @@
+{
+  "name": "propertyos",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "PropertyOS: vanilla-JS PWA on Supabase, built with esbuild into dist/.",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "node build.mjs",
+    "dev": "node build.mjs --dev",
+    "preview": "node build.mjs --preview",
+    "check": "node check.mjs"
+  },
+  "devDependencies": {
+    "@supabase/supabase-js": "2.95.0",
+    "esbuild": "0.28.2",
+    "sirv": "3.0.2"
+  }
+}
