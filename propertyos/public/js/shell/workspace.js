@@ -18,7 +18,7 @@ const sample = { month: curMonth(), summary: { expected: 48500, collected: 14000
   { property_id: 'sample', property_name: 'Sunrise Heights', label: '202', tenant_name: 'Sana Khan', rent: 16000, paid: 0, status: 'partial', claims: [{ amount: 8000 }], outstanding: 32000 },
 ] };
 let selected = ''; let query = ''; let tab = 'all';
-const button = (label, action, cls = '', ic) => h('button', { type: 'button', class: cls, 'aria-label': label === '' ? (ic === 'bell' ? 'Notifications' : ic) : label === '↗' ? 'Open unit details' : undefined, onClick: action }, ic ? icon(ic, 18) : null, label);
+const button = (label, action, cls = '', ic) => h('button', { type: 'button', class: cls, 'aria-label': label === '' ? (ic === 'bell' ? 'Notifications' : ic) : label === '↗' ? 'Open unit details' : (cls.includes('ws-nav') && typeof label === 'string' ? label : undefined), onClick: action }, ic ? icon(ic, 18) : null, label);
 const chip = (text, cls = '') => h('span', { class: `ws-chip ${cls}` }, text);
 const panelTitle = (title, sub, action) => h('div', { class: 'ws-panel-title' }, h('div', null, h('h2', null, title), sub ? h('p', null, sub) : null), action);
 
@@ -43,7 +43,7 @@ export function renderWorkspace() {
   const nav = (label, ic, id) => button(label, () => go(id), 'ws-nav', ic);
   const sidebar = h('aside', { class: 'ws-sidebar' },
     h('a', { class: 'ws-brand', href: '/' }, h('span', { class: 'ws-logo' }, icon('building', 23)), 'Property', h('strong', null, 'OS'), h('sup', null, 'ONE')),
-    h('div', { class: 'ws-workspace-label' }, h('span', { class: 'ws-avatar' }, 'M'), h('div', null, h('b', null, 'My workspace'), h('small', null, preview || S.me?.user.is_demo ? 'Demo portfolio' : 'Personal portfolio')), icon('down', 14)),
+    h('div', { class: 'ws-workspace-label' }, h('span', { class: 'ws-avatar' }, preview ? 'M' : initials(S.me.user.name)), h('div', null, h('b', null, 'My workspace'), h('small', null, preview || S.me?.user.is_demo ? 'Demo portfolio' : 'Personal portfolio')), icon('down', 14)),
     h('small', { class: 'ws-nav-label' }, 'WORKSPACE'),
     button('Overview', refresh, 'ws-nav active', 'home'), nav('Properties & units', 'building', 'properties'), nav('Tenants & leases', 'key', 'properties'), nav('Rent & payments', 'rent', 'rent'), nav('Repairs', 'wrench', 'repairs'), nav('Visitors & gate', 'shield', 'visitors'),
     h('small', { class: 'ws-nav-label' }, 'FINANCE'),
@@ -54,13 +54,23 @@ export function renderWorkspace() {
   const roleSelect = (preview || S.me?.user.is_demo) ? h('select', { 'aria-label': preview ? 'Start demo as' : 'Demo role', onChange: async e => { try { if (preview) await startDemo(e.target.value); else { await api.post('/demo/switch', {role:e.target.value}); emit('demo-switch'); } } catch(err) { toast(err.message,'bad'); } } }, ['landlord','tenant','guard'].map(role=>h('option',{value:role,selected:role===(preview ? 'landlord' : S.role)},role==='guard'?'Gate staff':role[0].toUpperCase()+role.slice(1)))) : null;
   const header = h('header', { class: 'ws-topbar' }, h('div', null, h('span', { class: 'ws-breadcrumb' }, 'Workspace'), h('span', null, ' / '), h('b', null, 'Overview')), h('div', { class:'ws-top-actions' }, roleSelect, chip(preview ? '●  Example workspace' : S.online ? '●  Connected' : '●  Offline', 'green'), button('', () => preview ? go('rent') : openNotifications(), 'ws-icon-button', 'bell'), button(preview ? 'MK' : initials(S.me.user.name), () => preview ? openSignIn() : go('settings'), 'ws-avatar')));
   const content = h('main', { class: 'ws-content' });
-  const title = h('div', { class: 'ws-title' }, h('div', null, h('div', { class: 'ws-eyebrow' }, 'YOUR PORTFOLIO, AT A GLANCE'), h('h1', null, `A little clarity. A lot of possibility.`), h('p', null, `Welcome${preview ? '' : ' back'}, ${preview ? 'Meera' : firstName(S.me.user.name)}. Here’s what’s happening across your properties.`)), button('Add property', () => go('properties', { add:true }), 'ws-primary', 'plus'));
+  const title = h('div', { class: 'ws-title' }, h('div', null, h('div', { class: 'ws-eyebrow' }, 'YOUR PORTFOLIO, AT A GLANCE'), h('h1', null, `Your portfolio, in focus.`), h('p', null, `Welcome${preview ? '' : ' back'}, ${preview ? 'Meera' : firstName(S.me.user.name)}. Here’s what’s happening across your properties.`)), button('Add property', () => go('properties', { add:true }), 'ws-primary', 'plus'));
   const toolbar = h('div', { class: 'ws-toolbar' }, h('div', null, propertySelect, chip(`${units.length} units`, 'plain')), h('div', null, icon('calendar', 16), monthLabel(d?.month || curMonth(), true), button('Export report', () => {
     if (!d) return toast('Rent data is still loading. Try again shortly.');
     const rows = [['Property','Unit','Tenant','Monthly rent (INR)','Collected (INR)','Outstanding (INR)','Status'], ...units.map(u => [u.property_name,u.label,u.tenant_name,u.rent,u.paid,u.outstanding,u.status])];
     downloadFile(`propertyos-${d.month}.csv`, rows.map(r => r.map(v => csvCell(typeof v === 'string' && /^[\t\r\n]|^\s*[=+@\-＝＋－＠]/.test(v) ? "'"+v : v)).join(',')).join('\n'));
   }, 'ws-button', 'download')));
   const metric = (label, value, foot, ic, cls) => h('article', { class: 'ws-metric' }, h('div', { class:'ws-metric-label' }, label, h('span', { class:`ws-metric-icon ${cls}` }, icon(ic,18))), h('strong', null, d ? value : '—'), h('p', null, foot));
+  const hero = h('section', { class:'ws-hero', 'aria-label':'Monthly collection summary' },
+    h('div', { class:'ws-hero-copy' }, h('div', {class:'ws-hero-kicker'}, h('span', {class:'ws-live-dot'}), 'THE MONTHLY PICTURE'),
+      h('h2', null, 'A better view of', h('br'), h('em', null, 'everything you manage.')),
+      h('p', null, 'Your properties, payments, and people — all in one place.'),
+      button('Explore rent activity', () => go('rent'), 'ws-hero-link', 'right')),
+    h('div', {class:'ws-hero-stat'}, h('div',{class:'ws-hero-stat-label'},'COLLECTED THIS MONTH'),
+      h('strong',null,d ? inr(collected) : '—'), h('span',null, d ? `of ${inr(expected)} expected` : 'Loading portfolio…'),
+      h('div',{class:'ws-hero-progress',role:'progressbar','aria-label':'Rent collected this month','aria-valuemin':'0','aria-valuemax':'100','aria-valuenow':String(Math.max(0,Math.min(100,rate)))},h('i',{style:{width:`${Math.max(0,Math.min(100,rate))}%`}})),
+      h('div',{class:'ws-hero-progress-label'},h('b',null,d ? `${rate}% collected` : 'Collection progress'),h('span',null,monthLabel(d?.month || curMonth())))),
+    h('div', {class:'ws-hero-art','aria-hidden':'true'},h('span',{class:'ws-art-sun'}),h('span',{class:'ws-art-building ws-art-back'}),h('span',{class:'ws-art-building ws-art-front'}),h('span',{class:'ws-art-ground'})));
   const metrics = h('section', { class: 'ws-metrics' }, metric('Rent collected', inr(collected), `${rate}% of ${inr(expected)} expected`, 'rent','green'), metric('Outstanding rent', inr(outstanding), 'Across current and earlier months', 'clock','amber'), metric('Occupancy', `${occupancy}%`, `${occupied.length} occupied · ${units.length - occupied.length} vacant`, 'building','purple'), metric('Open repairs', String(repairs.length), `${repairs.filter(r => r.urgency === 'urgent').length} urgent · ready for your attention`, 'wrench','blue'));
   const chart = h('div', { class: 'ws-chart' });
   const chartPanel = h('section', { class: 'ws-panel ws-chart-panel' }, panelTitle('Current tenancy collections', 'Last 6 months · excludes former residents and vacant units', button('View report ↗', reports, 'ws-text-button')), h('div', { class:'ws-chart-legend' }, chip('● Collected','green'), chip('● Expected','plain')), chart);
@@ -91,7 +101,7 @@ export function renderWorkspace() {
   const search = h('input',{type:'search',placeholder:'Search tenants or units…','aria-label':'Search tenants or units',value:query,onInput:e=>{query=e.target.value;drawRows();}});
   const tablePanel = h('section',{class:'ws-panel ws-tenants'},panelTitle('Your people. Your places.', 'Every home, with the details that matter.',button('Manage properties ↗',()=>go('properties'),'ws-text-button')),h('div',{class:'ws-table-tools'},tabs,h('label',{class:'ws-search'},icon('search',16),search)),list);
   const banner = h('div',{class:'ws-banner'},h('div',null,chip('PROPERTYOS ONE'),h('h2',null,'Good spaces. Great experiences.'),h('p',null,'From the first rent payment to the last visitor of the day.')),button(preview?'Explore live demo →':'Open visitor passes →',()=>go('visitors'),'ws-button'));
-  content.append(title,preview?h('div',{class:'ws-demo-note'},'You’re viewing illustrative data. ',button('Start an interactive demo →',async()=>{try{await startDemo('landlord');}catch(e){toast(e.message,'bad');}},'ws-text-button')):'',toolbar,metrics,h('div',{class:'ws-middle'},chartPanel,attention),tablePanel,banner,h('footer',null,'Built around your properties. Designed around you.',h('span',null,'PropertyOS One · Rent goes directly to the landlord')));
+  content.append(title,preview?h('div',{class:'ws-demo-note'},'You’re viewing illustrative data. ',button('Start an interactive demo →',async()=>{try{await startDemo('landlord');}catch(e){toast(e.message,'bad');}},'ws-text-button')):'',toolbar,hero,metrics,h('div',{class:'ws-middle'},chartPanel,attention),tablePanel,banner,h('footer',null,'Built around your properties. Designed around you.',h('span',null,'PropertyOS One · Rent goes directly to the landlord')));
   home.append(sidebar,h('div',{class:'ws-main'},header,content));
   drawTabs();drawRows();setTimeout(drawChart,0);
   return {home,dock:h('div',{class:'ws-no-dock'})};

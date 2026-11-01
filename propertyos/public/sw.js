@@ -1,7 +1,7 @@
 // PropertyOS service worker: lets the app open offline.
 // Static files: network first (so every module comes from one release), cache as the fallback.
 // /api is never cached here; the app keeps its own small stale copy of recent screens.
-const CACHE = 'propertyos-acaee6d50b';
+const CACHE = 'propertyos-748ce27b9b';
 const SHELL = [
   "/",
   "/css/apps.css",
