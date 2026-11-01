@@ -1,12 +1,13 @@
 // PropertyOS service worker: lets the app open offline.
 // Static files: network first (so every module comes from one release), cache as the fallback.
 // /api is never cached here; the app keeps its own small stale copy of recent screens.
-const CACHE = 'propertyos-8ce16ba38f';
+const CACHE = 'propertyos-acaee6d50b';
 const SHELL = [
   "/",
   "/css/apps.css",
   "/css/glass.css",
   "/css/shell.css",
+  "/css/workspace.css",
   "/icons/icon-192.png",
   "/icons/icon-512.png",
   "/icons/icon.svg",
@@ -44,6 +45,7 @@ const SHELL = [
   "/js/shell/pin.js",
   "/js/shell/refract.js",
   "/js/shell/welcome.js",
+  "/js/shell/workspace.js",
   "/manifest.webmanifest",
   "/index.html"
 ];

@@ -1,0 +1,12 @@
+{
+  "name": "propertyos-one-workspace",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "npm --prefix propertyos run dev",
+    "test": "npm --prefix propertyos test",
+    "check": "npm --prefix propertyos run i18n",
+    "stamp": "npm --prefix propertyos run stamp"
+  },
+  "engines": { "node": ">=22.5" }
+}

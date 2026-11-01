@@ -1,3 +1,4 @@
+import { renderWorkspace } from './workspace.js';
 // Home screen: greeting, role widgets, app icons and the dock.
 import { h } from '../core/h.js';
 import { icon, hero } from '../core/icons.js';
@@ -166,6 +167,7 @@ function AppIcon(id, { badge = 0, dock = false } = {}) {
 
 // ---------- home ----------
 export function renderHome() {
+  if (S.role === 'landlord' && S.prefs.lang !== 'hi') return renderWorkspace();
   const me = S.me;
   const role = S.role;
   const name = firstName(me.user.name);

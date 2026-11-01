@@ -1,3 +1,4 @@
+import { renderWorkspace } from './workspace.js';
 // Signed-out lock screen: big clock, sign in / create account / try the demo.
 import { h } from '../core/h.js';
 import { icon } from '../core/icons.js';
@@ -10,6 +11,7 @@ import { haptic, sound } from '../core/fx.js';
 import { chooseLang, getJoinCode, openSignIn, openSignUp, startDemo } from '../apps/auth.js';
 
 export function renderWelcome() {
+  if (!getJoinCode() && S.prefs.lang !== 'hi') return renderWorkspace().home;
   const time = h('div', { class: 'clock-time' }, fmtClock(nowTs()));
   const date = h('div', { class: 'clock-date' }, fmtWeekday(nowTs()));
   const tick = () => { time.textContent = fmtClock(nowTs()); date.textContent = fmtWeekday(nowTs()); };

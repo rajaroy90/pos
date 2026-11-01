@@ -63,11 +63,15 @@ export function register(r) {
       sum.pending += row.pending;
       sum.outstanding += ledger.outstanding;
       if (row.status === 'overdue') sum.overdue_count++;
-      rows.push({ ...base, status: row.status, paid: row.paid, pending: row.pending, claims, outstanding: ledger.outstanding, due_ts: row.due_ts });
+      rows.push({ ...base, expected: row.expected, status: row.status, paid: row.paid, pending: row.pending, claims, outstanding: ledger.outstanding, due_ts: row.due_ts });
     }
     // Claims for other months also need attention
     const otherClaims = pays.filter((p) => p.status === 'pending' && p.period !== month).length;
-    return { month, summary: { ...sum, other_claims: otherClaims }, units: rows };
+    const otherClaimsByProperty = {};
+    for (const p of pays.filter(p => p.status === 'pending' && p.period !== month)) {
+      otherClaimsByProperty[p.property_id] = (otherClaimsByProperty[p.property_id] || 0) + 1;
+    }
+    return { month, summary: { ...sum, other_claims: otherClaims, other_claims_by_property: otherClaimsByProperty }, units: rows };
   });
 
   // ---- tenant: my rent ----
